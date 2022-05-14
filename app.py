@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD  '] = 'mobyte73'
+app.config['MYSQL_PASSWORD'] = 'mobyte73'
 app.config['MYSQL_DB'] = 'moblog'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
@@ -69,10 +69,11 @@ def register():
     
     flash("You are now registered and can log in", "success")
     
-    redirect(url_for('index'))
+    return redirect(url_for('login'))
     
   return render_template('register.html', form=form) 
   
   
 if __name__ == '__main__':
+  app.secret_key ='secret123'
   app.run(debug=True)
