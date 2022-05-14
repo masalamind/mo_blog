@@ -1,0 +1,14 @@
+{% extends 'layout.html' %}
+
+{% block title%}Mo's Blog - Articles {% endblock %}
+
+{% block body %}  
+  <h1>Articles </h1>
+  <ul>
+   
+    {% for article in articles %}
+    <li class="group-item">{{ article.title }}</li>    
+    {% endfor%}
+
+  </ul>
+{% endblock %}
