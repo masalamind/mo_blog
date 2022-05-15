@@ -93,7 +93,7 @@ def login():
       password = data['password']
 
       # compare passwords
-      if sha256_crypt.verify(password_candidate, password)
+      if sha256_crypt.verify(password_candidate, password):
         app.logger.info('PASSWORD MATCHED')
     else:
       app.logger.info('NO USER')
