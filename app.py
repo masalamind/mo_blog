@@ -3,7 +3,7 @@ from flask import flash, redirect, session, logging
 from flask_mysqldb import MySQL
 from wtforms import Form, StringField, TextAreaField, PasswordField, validators
 from passlib.hash import sha256_crypt
-from data import Articles
+# from data import Articles
 from functools import wraps
 
 app = Flask(__name__)
@@ -18,7 +18,7 @@ app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
 mysql = MySQL(app)
 
-Articles = Articles()
+# Articles = Articles()
 
 @app.route('/')
 def index():
@@ -32,11 +32,31 @@ def about():
     
 @app.route('/articles/')
 def articles():
-  return render_template('articles.html', articles=Articles)
+      # create cursor
+    cur = mysql.connection.cursor()
 
+    # get article
+    result = cur.execute("SELECT * FROM articles")
+    articles = cur.fetchall()
+
+    if result > 0:
+      return render_template('articles.html', articles=articles)
+    else:
+      msg = "No Articles Found"
+      return render_template('articles.html', msg=msg)
+    cur.close()
+
+    return render_template('articles.html', articles=Articles)
+
+# Single article
 @app.route('/articles/article/<string:id>/')
 def article(id):
-  return render_template('article.html', id=id)
+
+  cur = mysql.connection.cursor()
+  result = cur.execute("SELECT * FROM articles WHERE id= %s", [id])
+  article = cur.fetchone()
+
+  return render_template('article.html', article=article)
 
 
 class RegisterForm(Form):
