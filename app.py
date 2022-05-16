@@ -126,7 +126,20 @@ def is_logged_in(f):
 @app.route('/dashboard')
 @is_logged_in
 def dashboard():
-  return render_template('dashboard.html')
+
+    # create cursor
+    cur = mysql.connection.cursor()
+
+    # get article
+    result = cur.execute("SELECT * FROM articles")
+    articles = cur.fetchall()
+
+    if result > 0:
+      return render_template('dashboard.html', articles=articles)
+    else:
+      msg = "No Articles Found"
+      return render_template('dashboard.html', msg=msg)
+    cur.close()
 
 # Use wtforms for blog articles
 class ArticleForm(Form):
@@ -155,7 +168,7 @@ def add_article():
 
     flash('Article Created', 'success')
     return redirect(url_for('dashboard'))
-  return render_template('add_article', form=form)
+  return render_template('add_article.html', form=form)
 
 
 # Check if user logged in
