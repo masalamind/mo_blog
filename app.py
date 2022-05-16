@@ -230,16 +230,33 @@ def edit_article(id):
     return redirect(url_for('dashboard'))
   return render_template('edit_article.html', form=form)
 
+
+# Delete article
+@app.route('/delete_article/<string:id>', methods=['POST'])
+@is_logged_in
+def delete_article(id):
+  # create cursor
+  cur = mysql.connection.cursor()
+
+  #execute query
+  cur.execute("DELETE FROM articles WHERE ID = %s", [id])
+
+  # commit to db
+  mysql.connection.commit()
+
+  # close connection
+  cur.close()
+
+  flash('Article Deleted', 'success')
+  return redirect(url_for('dashboard'))
+
 # Check if user logged in
-
-
 @app.route('/logout')
 @is_logged_in
 def logout():
   session.clear()
   flash("You are now logged out", 'success')
   return redirect(url_for('login'))
-
 
 
 if __name__ == '__main__':
